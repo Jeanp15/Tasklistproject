@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>📅 Calendario de Tareas</title>
+
+  <!-- Bootstrap y FullCalendar -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/locales-all.global.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    h1 {
+      color: #0d6efd;
+      font-weight: 700;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    #calendar {
+      max-width: 1200px;
+      margin: 0 auto;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: white;
+      padding: 15px;
+      min-height: 900px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    /* LEYENDA */
+    .legend-container {
+      max-width: 1200px;
+      margin: 25px auto;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .legend-rect {
+      width: 30px;
+      height: 15px;
+      border-radius: 3px;
+      margin-right: 10px;
+    }
+
+    .high { background: #ef4444; }
+    .medium { background: #facc15; }
+    .low { background: #16a34a; }
+
+    /* BOTÓN VOLVER */
+    .btn-home {
+      display: inline-block;
+      text-decoration: none;
+      background: #0d6efd;
+      color: white;
+      padding: 10px 25px;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      margin: 40px auto;
+      display: block;
+      width: fit-content;
+    }
+    .btn-home:hover {
+      background: #0b5ed7;
+      transform: translateY(-2px);
+    }
+
+    /* ESTILO DE EVENTOS */
+    .fc-event-title {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+    }
+
+    .priority-circle {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container text-center mt-4">
+    <h1>📅 Calendario de Tareas</h1>
+  </div>
+
+  <div id="calendar"></div>
+
+  <!-- LEYENDA -->
+  <div class="legend-container">
+    <div class="legend-item"><div class="legend-rect high"></div>Prioridad: <span style="color:#ef4444; margin-left:6px;">Alta</span></div>
+    <div class="legend-item"><div class="legend-rect medium"></div>Prioridad: <span style="color:#facc15; margin-left:6px;">Media</span></div>
+    <div class="legend-item"><div class="legend-rect low"></div>Prioridad: <span style="color:#16a34a; margin-left:6px;">Baja</span></div>
+  </div>
+
+  <a href="/dashboard" class="btn-home">Volver al Inicio</a>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+      const calendarEl = document.getElementById('calendar');
+
+      try {
+        const response = await fetch('/api/tasks');
+        if (!response.ok) throw new Error('No se pudo obtener las tareas');
+        const tasks = await response.json();
+
+        const events = tasks.map(task => {
+          let color;
+          switch (task.priority) {
+            case 'Alta': color = '#ef4444'; break;
+            case 'Media': color = '#facc15'; break;
+            case 'Baja': color = '#16a34a'; break;
+            default: color = '#94a3b8';
+          }
+
+          return {
+            title: task.title,
+            start: new Date(task.dueDate + 'T00:00:00'),
+            extendedProps: { color, priority: task.priority },
+            textColor: color
+          };
+        });
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          locale: 'es',
+          headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          },
+          events,
+          eventContent: function(arg) {
+            const color = arg.event.extendedProps.color || '#000';
+            const circle = `<span class="priority-circle" style="background:${color}"></span>`;
+            const text = `<span style="color:${color}">${arg.event.title}</span>`;
+            return { html: circle + text };
+          }
+        });
+
+        calendar.render();
+      } catch (error) {
+        console.error('❌ Error al cargar el calendario:', error);
+      }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

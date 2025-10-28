@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Agregar Nueva Tarea</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8fafc;
+    }
+
+    .card {
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #1d4ed8;
+    }
+  </style>
+</head>
+
+<body class="d-flex align-items-center justify-content-center vh-100">
+  <div class="container" style="max-width: 700px;">
+    <div class="card p-4">
+      <h1 class="text-center mb-4">📝 Agregar Nueva Tarea</h1>
+
+      <form th:action="@{/tasks/add}" th:object="${task}" method="post" class="needs-validation" novalidate>
+
+        <!-- TÍTULO -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Título</label>
+          <input type="text" th:field="*{title}" class="form-control" placeholder="Ej. Diseñar página principal"
+            required>
+        </div>
+
+        <!-- DESCRIPCIÓN -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Descripción</label>
+          <textarea th:field="*{description}" class="form-control" rows="3"></textarea>
+        </div>
+
+        <!-- FECHA Y PRIORIDAD -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Fecha de Vencimiento</label>
+            <input type="date" th:field="*{dueDate}" class="form-control">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Prioridad</label>
+            <select th:field="*{priority}" class="form-select">
+              <option value="" disabled selected>Selecciona prioridad</option>
+              <option th:each="p : ${priorities}" th:value="${p}" th:text="${p}"></option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ESTADO -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Estado</label>
+          <select th:field="*{status}" class="form-select">
+            <option value="" disabled selected>Selecciona estado</option>
+            <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+          </select>
+        </div>
+
+        <!-- EQUIPO -->
+        <select name="teamId" class="form-select">
+          <option value="">Sin equipo</option>
+          <option th:each="t : ${teams}" th:value="${t.id}" th:text="${t.nombre}"></option>
+        </select>
+
+
+        <!-- BOTONES -->
+        <div class="text-end mt-4">
+          <a href="/tasks" class="btn btn-outline-secondary me-2">Cancelar</a>
+          <button type="submit" class="btn btn-primary">💾 Guardar Tarea</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

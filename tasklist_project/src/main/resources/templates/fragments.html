@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Fragments</title>
+</head>
+<body>
+
+<!-- =========================
+     FOOTER FRAGMENT
+========================= -->
+<div th:fragment="footer">
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>TaskList</h5>
+                    <p>El sistema de gestión de tareas más intuitivo y eficiente para aumentar tu productividad.</p>
+                    <div class="d-flex gap-3 mt-3">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-2 mb-4">
+                    <h5>Producto</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="tareas.html">Tareas</a></li>
+                        <li><a href="calendario.html">Calendario</a></li>
+                        <li><a href="equipo.html">Equipos</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-2 mb-4">
+                    <h5>Legal</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="TyC.html">Términos y Condiciones</a></li>
+                        <li><a href="Politica y Priv.html">Política de Privacidad</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <h5>Suscríbete</h5>
+                    <p>Recibe tips de productividad y novedades de TaskList.</p>
+                    <div class="input-group">
+                        <input type="email" class="form-control" placeholder="Tu correo electrónico">
+                        <button class="btn btn-primary">Suscribirse</button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <p class="text-center mb-0">&copy; 2025 TaskList. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</div>
+
+</body>
+</html>

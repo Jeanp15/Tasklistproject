@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskList - Dashboard</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Estilos generales -->
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f7f9fc;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Navbar */
+.navbar {
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.navbar-brand {
+  font-weight: 700;
+  color: #007bff !important; /* Azul como en index */
+  transition: color 0.3s ease;
+}
+.navbar-brand:hover {
+  color: #000 !important; /* Negro al pasar el mouse */
+}
+.navbar .nav-link {
+  font-weight: 500;
+  color: #555;
+}
+.navbar .nav-link.active {
+  color: #007bff !important;
+}
+
+    /* Hero Section */
+    .hero-section {
+      background: linear-gradient(135deg, #4a90e2, #007bff);
+      color: #fff;
+      padding: 100px 0;
+      text-align: center;
+    }
+    .hero-section h1 {
+      font-weight: 700;
+    }
+    .hero-section .btn {
+      border-radius: 30px;
+      font-weight: 500;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+
+    /* Stats Cards */
+    .stats-card {
+      background: #fff;
+      border-radius: 15px;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease;
+    }
+    .stats-card:hover {
+      transform: translateY(-5px);
+    }
+    .stats-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #007bff;
+    }
+    .stats-label {
+      font-size: 0.95rem;
+      color: #777;
+    }
+
+    /* Dashboard Section */
+    .dashboard-section {
+      background: #fff;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+      margin-bottom: 40px;
+    }
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #f1f1f1;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #2c3e50;
+    }
+    .view-all-link {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .view-all-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Task Cards */
+    .task-card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease;
+    }
+    .task-card:hover {
+      transform: translateY(-4px);
+    }
+
+    /* Footer */
+    footer {
+      background: #1e293b;
+      color: #f1f1f1;
+      padding: 60px 0 30px;
+      margin-top: 60px;
+    }
+    footer h5 {
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+    footer p {
+      color: #cbd5e1;
+    }
+    footer a {
+      color: #cbd5e1;
+    }
+    footer a:hover {
+      color: #fff;
+    }
+    footer .input-group input {
+      border-radius: 25px 0 0 25px;
+      border: none;
+    }
+    footer .input-group button {
+      border-radius: 0 25px 25px 0;
+      background-color: #007bff;
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="tasklist.html"><i class="fas fa-tasks me-2"></i>TaskList</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="/tasks">Mis Tareas</a></li>
+          <li class="nav-item"><a class="nav-link" href="/teams">Equipo</a></li>
+          <li class="nav-item"><a class="nav-link" href="/calendar">Calendario</a></li>
+        </ul>
+        <div class="d-flex align-items-center">
+          <div class="dropdown me-3">
+            <a href="#" class="dropdown-toggle text-dark" data-bs-toggle="dropdown">
+              <i class="fas fa-bell"></i>
+              <span class="badge bg-danger rounded-pill">3</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#">Tarea “Diseño UI” está por vencer</a></li>
+              <li><a class="dropdown-item" href="#">Nuevo comentario en “Revisión BD”</a></li>
+              <li><a class="dropdown-item" href="#">Tarea completada: “Documentación”</a></li>
+            </ul>
+          </div>
+          <div class="dropdown">
+            <a href="#" class="dropdown-toggle text-dark" data-bs-toggle="dropdown">
+              <img src="https://ui-avatars.com/api/?name=Usuario+Ejemplo&background=4361ee&color=fff" class="user-avatar me-2">
+              <span>Usuario Ejemplo</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#">Mi Perfil</a></li>
+              <li><a class="dropdown-item" href="#">Configuración</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero-section">
+    <div class="container">
+      <h1 class="display-5 fw-bold">Tu centro de productividad</h1>
+      <p class="lead mb-4">Gestiona tus tareas, calendario y equipo en un solo lugar</p>
+      <a href="tareas.html" class="btn btn-light btn-lg px-4"><i class="fas fa-plus me-2"></i>Comenzar ahora</a>
+    </div>
+  </section>
+
+  <!-- Contenido -->
+  <div class="container mt-5">
+    <!-- Estadísticas -->
+    <div class="row mb-5">
+      <div class="col-md-3"><div class="stats-card"><div class="stats-number">12</div><div class="stats-label">Tareas Pendientes</div></div></div>
+      <div class="col-md-3"><div class="stats-card"><div class="stats-number">8</div><div class="stats-label">Completadas</div></div></div>
+      <div class="col-md-3"><div class="stats-card"><div class="stats-number">3</div><div class="stats-label">Vencidas</div></div></div>
+      <div class="col-md-3"><div class="stats-card"><div class="stats-number">2</div><div class="stats-label">En Progreso</div></div></div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard-section">
+      <div class="dashboard-header">
+        <h2 class="section-title">Tareas Recientes</h2>
+        <a href="tareas.html" class="view-all-link">Ver todas</a>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <div class="card task-card">
+            <div class="card-body">
+              <span class="badge bg-danger mb-2">Alta Prioridad</span>
+              <h5>Diseñar interfaz de usuario</h5>
+              <p>Crear wireframes y mockups para la nueva app móvil.</p>
+              <small class="text-muted"><i class="far fa-calendar me-1"></i>Vence: Hoy</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="card task-card">
+            <div class="card-body">
+              <span class="badge bg-warning text-dark mb-2">Media Prioridad</span>
+              <h5>Revisar documentación técnica</h5>
+              <p>Actualizar la documentación del API.</p>
+              <small class="text-muted"><i class="far fa-calendar me-1"></i>Vence: 2 días</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <h5>TaskList</h5>
+          <p>El sistema de gestión de tareas más intuitivo y eficiente para aumentar tu productividad.</p>
+          <div class="d-flex gap-3 mt-3">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="col-md-2 mb-4">
+          <h5>Producto</h5>
+          <ul class="list-unstyled">
+            <li><a href="tareas.html">Tareas</a></li>
+            <li><a href="calendario.html">Calendario</a></li>
+            <li><a href="equipo.html">Equipos</a></li>
+          </ul>
+        </div>
+        <div class="col-md-2 mb-4">
+          <h5>Legal</h5>
+          <ul class="list-unstyled">
+            <li><a href="TyC.html">Términos y Condiciones</a></li>
+            <li><a href="Politica y Priv.html">Política de Privacidad</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4 mb-4">
+          <h5>Suscríbete</h5>
+          <p>Recibe tips de productividad y novedades de TaskList.</p>
+          <div class="input-group">
+            <input type="email" class="form-control" placeholder="Tu correo electrónico">
+            <button class="btn btn-primary">Suscribirse</button>
+          </div>
+        </div>
+      </div>
+      <hr class="bg-light">
+      <p class="text-center mb-0">&copy; 2025 TaskList. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+/* =========================
+   styles.css
+   Archivo de estilos centralizado para TaskList
+========================= */
+
+/* -------------------------
+   BODY
+------------------------- */
+body {
+    background-color: #f8f9fa; /* Fondo claro */
+    font-family: Arial, sans-serif;
+}
+
+/* -------------------------
+   NAVBAR
+------------------------- */
+.navbar-brand {
+    font-weight: 700;
+    color: #007bff !important; /* Azul bootstrap */
+    font-size: 1.4rem;
+    transition: color 0.3s;
+}
+.navbar-brand:hover {
+    color: #000 !important; /* Negro al pasar el mouse */
+}
+
+/* ==========================
+   BOTÓN “VOLVER AL INICIO”
+/* BOTÓN “VOLVER AL INICIO” */
+.btn-home {
+    background-color: #007bff !important; /* Azul */
+    color: white !important;              /* Texto blanco */
+    padding: 10px 25px !important;        /* Espaciado interno */
+    border-radius: 25px !important;       /* Bordes redondeados */
+    text-decoration: none !important;     /* Sin subrayado */
+    display: inline-block !important;
+    transition: 0.3s !important;          /* Animación suave */
+}
+
+.btn-home:hover {
+    background-color: #0056b3 !important; /* Azul más oscuro */
+    color: #fff !important;
+    text-decoration: none !important;
+}
+
+
+
+/* -------------------------
+   FOOTER
+------------------------- */
+footer {
+    background-color: #1e293b; /* Fondo oscuro */
+    color: white;
+    padding: 40px 0;
+    margin-top: 60px;
+}
+footer a {
+    color: #f8f9fa;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+footer a:hover {
+    color: #d1e7ff; /* Azul claro al pasar mouse */
+}
+footer h5 {
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+footer .input-group input {
+    border-radius: 25px 0 0 25px; /* Bordes redondeados izquierda */
+}
+footer .input-group button {
+    border-radius: 0 25px 25px 0; /* Bordes redondeados derecha */
+}
+footer hr {
+    opacity: 0.2;
+}
+
+/* -------------------------
+   TABLAS
+------------------------- */
+table {
+    background: white;
+    border-radius: 10px; /* Bordes redondeados */
+    overflow: hidden;
+}
+th {
+    background-color: #0d6efd !important; /* Azul encabezados */
+    color: white;
+}
+td, th {
+    vertical-align: middle !important; /* Centrar contenido vertical */
+}
+
+/* -------------------------
+   FORMULARIOS
+------------------------- */
+input.form-control,
+textarea.form-control,
+select.form-select {
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+input[type="date"].form-control {
+    max-width: 250px;
+}
+
+/* -------------------------
+   TITULOS
+------------------------- */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+}
+
+/* -------------------------
+   OTROS
+------------------------- */
+.text-center {
+    text-align: center;
+}
+
+.text-end {
+    text-align: right;
+}
+
+.d-flex {
+    display: flex;
+}
+.gap-3 {
+    gap: 1rem;
+}
+.mb-3 {
+    margin-bottom: 1rem;
+}
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+.mt-3 {
+    margin-top: 1rem;
+}
+.mt-4 {
+    margin-top: 1.5rem;
+}
+.p-4 {
+    padding: 1.5rem;
+}
+.shadow-sm {
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+}

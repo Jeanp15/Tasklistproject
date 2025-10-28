@@ -1,0 +1,6 @@
+com\tasklist\model\Task$Status.class
+com\tasklist\TasklistApplication.class
+com\tasklist\repository\TaskRepository.class
+com\tasklist\model\Task.class
+com\tasklist\controller\TaskController.class
+com\tasklist\model\Task$Priority.class
