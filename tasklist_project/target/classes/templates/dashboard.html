@@ -64,42 +64,42 @@
     </div>
   </section>
 
-  <div class="container mt-5">
+<div class="container mt-5">
     <div class="row mb-5">
-      <div class="col-md-3"><div class="stats-card"><div class="stats-number">12</div><div class="stats-label">Tareas Pendientes</div></div></div>
-      <div class="col-md-3"><div class="stats-card"><div class="stats-number">8</div><div class="stats-label">Completadas</div></div></div>
-      <div class="col-md-3"><div class="stats-card"><div class="stats-number">3</div><div class="stats-label">Vencidas</div></div></div>
-      <div class="col-md-3"><div class="stats-card"><div class="stats-number">2</div><div class="stats-label">En Progreso</div></div></div>
+      <div class="col-md-3"><div class="stats-card"><div class="stats-number" th:text="${pendingCount}">12</div><div class="stats-label">Tareas Pendientes</div></div></div>
+      <div class="col-md-3"><div class="stats-card"><div class="stats-number" th:text="${completedCount}">8</div><div class="stats-label">Completadas</div></div></div>
+      <div class="col-md-3"><div class="stats-card"><div class="stats-number" th:text="${expiredCount}">3</div><div class="stats-label">Vencidas</div></div></div>
+      <div class="col-md-3"><div class="stats-card"><div class="stats-number" th:text="${inProgressCount}">2</div><div class="stats-label">En Progreso</div></div></div>
     </div>
 
     <div class="dashboard-section">
       <div class="dashboard-header">
         <h2 class="section-title">Tareas Recientes</h2>
-        <a href="tareas.html" class="view-all-link">Ver todas</a>
+        <a th:href="@{/tasks}" class="view-all-link">Ver todas</a>
       </div>
       <div class="row">
-        <div class="col-md-6 mb-4">
+        <div class="col-md-6 mb-4" th:each="task : ${recentTasks}">
           <div class="card task-card">
             <div class="card-body">
-              <span class="badge bg-danger mb-2">Alta Prioridad</span>
-              <h5>Diseñar interfaz de usuario</h5>
-              <p>Crear wireframes y mockups para la nueva app móvil.</p>
-              <small class="text-muted"><i class="far fa-calendar me-1"></i>Vence: Hoy</small>
+              <span class="badge mb-2" 
+                    th:classappend="${task.priority.name() == 'Alta' ? 'bg-danger' : 
+                                     (task.priority.name() == 'Media' ? 'bg-warning text-dark' : 'bg-primary')}"
+                    th:text="${task.priority} + ' Prioridad'">Alta Prioridad</span>
+              <h5 th:text="${task.title}">Diseñar interfaz de usuario</h5>
+              <p th:text="${task.description}">Descripción de la tarea.</p>
+              <small class="text-muted">
+                  <i class="far fa-calendar me-1"></i>
+                  <span th:text="${task.dueDate != null ? #temporals.format(task.dueDate, 'yyyy-MM-dd') : 'Sin fecha'}">Vence: Hoy</span>
+              </small>
             </div>
           </div>
         </div>
-        <div class="col-md-6 mb-4">
-          <div class="card task-card">
-            <div class="card-body">
-              <span class="badge bg-warning text-dark mb-2">Media Prioridad</span>
-              <h5>Revisar documentación técnica</h5>
-              <p>Actualizar la documentación del API.</p>
-              <small class="text-muted"><i class="far fa-calendar me-1"></i>Vence: 2 días</small>
-            </div>
-          </div>
+        <div th:if="${recentTasks.isEmpty()}" class="col-12">
+            <p class="text-center text-muted">No hay tareas activas o próximas para mostrar.</p>
         </div>
       </div>
     </div>
+  </div>
   </div>
 
   <div th:replace="fragments :: footer"></div>

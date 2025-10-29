@@ -119,6 +119,39 @@
                         <span class="visually-hidden">Cargando...</span>
                     </div>
                 </div>
+                
+                <div id="teamEditForm" class="container-fluid p-0"> 
+                  <form th:action="@{'/teams/edit/' + ${team.id}}" th:object="${team}" method="post" class="needs-validation" novalidate>
+                    <input type="hidden" th:field="*{id}" />
+
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Nombre del Equipo</label>
+                      <input type="text" th:field="*{nombre}" class="form-control" required />
+                      <div class="invalid-feedback">El nombre del equipo es obligatorio.</div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Descripción</label>
+                      <textarea th:field="*{descripcion}" class="form-control" rows="3"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Miembros</label>
+                      <textarea th:field="*{miembros}" class="form-control" rows="3"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Progreso (%)</label>
+                      <input type="number" min="0" max="100" th:field="*{progreso}" class="form-control" />
+                    </div>
+
+                    <div class="text-end mt-4">
+                      <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    </div>
+                  </form>
+                </div>
+                
               </div>
           </div>
       </div>
