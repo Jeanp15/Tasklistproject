@@ -28,8 +28,22 @@ document.addEventListener('DOMContentLoaded', function() {
               
               // Carga el contenido en el modal
               editTeamModalBody.innerHTML = fragmentHtml; 
+
+              // Re-inicializar la validación para el formulario cargado
+              const form = editTeamModalBody.querySelector('form');
+              if (form) {
+                  form.addEventListener('submit', function(e) {
+                      if (!this.checkValidity()) {
+                          e.preventDefault();
+                          e.stopPropagation();
+                      }
+                      this.classList.add('was-validated');
+                  }, false);
+              }
+              
           } else {
-              editTeamModalBody.innerHTML = '<div class="alert alert-danger">Error al cargar el formulario de edición.</div>';
+              // Reportar error de HTTP
+              editTeamModalBody.innerHTML = '<div class="alert alert-danger">Error al cargar el formulario de edición: ' + response.statusText + '</div>';
           }
       } catch (error) {
           console.error('Error de red al cargar el formulario:', error);

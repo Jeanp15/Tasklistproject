@@ -26,12 +26,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (editTaskModalElement) {
         editTaskModalElement.addEventListener('show.bs.modal', async function (event) {
 
-            // Botón que disparó el modal y contiene el ID
             const button = event.relatedTarget;
             const taskId = button.getAttribute('data-task-id');
-            const url = `/tasks/edit/${taskId}`; // URL CORRECTA
+            const url = `/tasks/edit/${taskId}`; 
             
-            // Muestra spinner
             editTaskModalBody.innerHTML = `
                 <div class="text-center p-5">
                     <div class="spinner-border text-primary" role="status">
@@ -47,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     const fragmentHtml = await response.text();
                     editTaskModalBody.innerHTML = fragmentHtml; 
                     
-                    // Re-inicializar la validación para el formulario cargado
                     const form = editTaskModalBody.querySelector('form');
                     if (form) {
                         form.addEventListener('submit', function(e) {
@@ -71,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // =======================================================
     // 3. VALIDACIÓN MANUAL DE FORMULARIOS (GLOBAL)
     // =======================================================
-    // Asegura que todos los formularios de los modales tengan la validación
     const allForms = document.querySelectorAll('.modal form');
     allForms.forEach(form => {
         form.addEventListener('submit', function(event) {

@@ -37,9 +37,12 @@ public class TaskController {
     public String listTasks(Model model) {
         model.addAttribute("tasks", taskRepository.findAll());
         
-        // CORRECCIÓN: Solo añadir "newTask" si no viene de un error de validación para preservar los datos del formulario
         if (!model.containsAttribute("newTask")) {
              model.addAttribute("newTask", new Task());
+        }
+       
+        if (!model.containsAttribute("showNewTaskModal")) {
+            model.addAttribute("showNewTaskModal", false);
         }
        
         model.addAttribute("priorities", Task.Priority.values());
@@ -57,20 +60,14 @@ public class TaskController {
                             Model model) {
         
         if (br.hasErrors()) {
-            // CORRECCIÓN: Setear el flag para que el JavaScript reabra el modal
             model.addAttribute("showNewTaskModal", true);
-            
-            // Recargamos los datos faltantes para que la vista se renderice
             model.addAttribute("tasks", taskRepository.findAll()); 
             model.addAttribute("priorities", Task.Priority.values());
             model.addAttribute("statuses", Task.Status.values());
             model.addAttribute("teams", teamRepository.findByActiveTrue());
-
-            // Retornar la vista directamente para mostrar errores en el modal
             return "tasks"; 
         }
 
-        // Asignar el equipo si se seleccionó uno
         if (teamId != null) {
             Optional<Team> teamOpt = teamRepository.findById(teamId);
             teamOpt.ifPresent(task::setEquipo);
@@ -80,7 +77,7 @@ public class TaskController {
         return "redirect:/tasks";
     }
 
-    // ===== Formulario para editar tarea (Ahora como Fragmento Modal) =====
+    // ===== Formulario para editar tarea (CARGA AJAX) =====
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id, Model model) {
         Optional<Task> taskOpt = taskRepository.findById(id);
@@ -89,28 +86,53 @@ public class TaskController {
             model.addAttribute("task", task);
             model.addAttribute("priorities", Task.Priority.values());
             model.addAttribute("statuses", Task.Status.values());
-            model.addAttribute("teams", teamRepository.findByActiveTrue());
+            // Se asegura que esta lista se carga para la etiqueta <select> en el fragmento.
+            model.addAttribute("teams", teamRepository.findByActiveTrue()); 
 
-            // Formatear fecha para el input
             String dueDateStr = "";
             if (task.getDueDate() != null) {
                 dueDateStr = task.getDueDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             }
             model.addAttribute("dueDateStr", dueDateStr);
 
-            // Retorna el fragmento de Thymeleaf, cargado por AJAX en el modal.
+            // Retorna el fragmento de Thymeleaf.
             return "edit-task :: taskEditForm";
         }
         return "redirect:/tasks";
     }
 
-    // ===== Eliminar tarea (Eliminación Lógica: Cambia el Status a Completada) =====
+    // ===== GUARDAR CAMBIOS DE TAREA (FINAL) =====
+    @PostMapping("/edit/{id}")
+    public String edit(@PathVariable Long id, 
+                       @Valid @ModelAttribute Task task, 
+                       BindingResult br,
+                       @RequestParam(value = "teamId", required = false) Long teamId, 
+                       Model model) { 
+
+        if (br.hasErrors()) {
+            return "redirect:/tasks";
+        }
+
+        task.setId(id);
+        
+        if (teamId != null && teamId != 0) { 
+            Optional<Team> teamOpt = teamRepository.findById(teamId);
+            teamOpt.ifPresent(task::setEquipo);
+        } else {
+            task.setEquipo(null); 
+        }
+
+        taskRepository.save(task);
+
+        return "redirect:/tasks";
+    }
+
+    // ===== Eliminar tarea (Lógica) =====
     @PostMapping("/delete/{id}") 
     public String deleteTask(@PathVariable Long id) {
         Optional<Task> taskOpt = taskRepository.findById(id);
         if (taskOpt.isPresent()) {
             Task task = taskOpt.get();
-            // Cambiamos el estado de la tarea a Completada
             task.setStatus(Task.Status.Completada); 
             taskRepository.save(task);
         }

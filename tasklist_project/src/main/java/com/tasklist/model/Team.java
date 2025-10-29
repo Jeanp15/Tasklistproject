@@ -1,7 +1,7 @@
 // src/main/java/com/tasklist/model/Team.java
 package com.tasklist.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class Team {
     private boolean active = true;
 
     @OneToMany(mappedBy = "equipo")
-    @JsonManagedReference
+    @JsonIgnore // CORRECCIÓN CLAVE: Esto soluciona errores de serialización/JPA que afectan a la carga de /teams y /tasks/edit.
     private List<Task> tareas;
 
     // Getters y setters

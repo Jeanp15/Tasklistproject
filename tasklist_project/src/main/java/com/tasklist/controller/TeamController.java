@@ -27,24 +27,22 @@ public class TeamController {
         return "teams";
     }
 
-    /* EL MÉTODO addForm() HA SIDO ELIMINADO (su contenido ahora está en teams.html) */
-
     @PostMapping("/add")
     public String save(@Valid @ModelAttribute("newTeam") Team team, BindingResult br, Model model) {
         if (br.hasErrors()) {
-            // Si hay errores, por simplicidad, redirigimos a la lista para recargar el contexto.
             return "redirect:/teams";
         }
         teamRepository.save(team);
         return "redirect:/teams";
     }
 
+    // ===== Formulario para editar equipo (CARGA AJAX) =====
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id, Model model) {
         Optional<Team> t = teamRepository.findById(id);
         if (t.isPresent()) {
             model.addAttribute("team", t.get());
-            // Retorna solo el fragmento del formulario, cargado por AJAX en el modal.
+            // Retorna solo el fragmento del formulario.
             return "edit-team :: teamEditForm"; 
         }
         return "redirect:/teams";
@@ -58,7 +56,7 @@ public class TeamController {
         return "redirect:/teams";
     }
 
-    @PostMapping("/delete/{id}") // CAMBIO: Usar POST en lugar de GET
+    @PostMapping("/delete/{id}") 
     public String delete(@PathVariable Long id) {
         Optional<Team> t = teamRepository.findById(id);
         if (t.isPresent()) {
