@@ -94,7 +94,8 @@
             </div>
           </div>
         </div>
-        <div th:if="${recentTasks.isEmpty()}" class="col-12">
+        <div th:if="${recentTasks == null or #lists.isEmpty(recentTasks)}" class="col-12">
+
             <p class="text-center text-muted">No hay tareas activas o próximas para mostrar.</p>
         </div>
       </div>
