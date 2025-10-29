@@ -51,9 +51,9 @@
                     data-bs-target="#editTeamModal"
                     th:data-team-id="${team.id}">✏️</button>
             
-            <form th:action="@{'/teams/delete/' + ${team.id}}" method="get" 
-                  style="display:inline;" onsubmit="return confirm('¿Eliminar equipo?');">
-               <button type="submit" class="btn btn-sm btn-outline-danger">🗑️</button>
+            <form th:action="@{'/teams/delete/' + ${team.id}}" method="post" 
+                  style="display:inline;" onsubmit="return confirm('¿Seguro que deseas desactivar este equipo (eliminación lógica)?');">
+               <button type="submit" class="btn btn-sm btn-outline-danger" title="Desactivar Equipo">🗑️</button>
             </form>
           </td>
         </tr>

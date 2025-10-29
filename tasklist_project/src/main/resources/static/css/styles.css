@@ -28,19 +28,20 @@ body {
    BOTÓN “VOLVER AL INICIO”
 /* BOTÓN “VOLVER AL INICIO” */
 .btn-home {
-    background-color: #007bff !important; /* Azul */
-    color: white !important;              /* Texto blanco */
-    padding: 10px 25px !important;        /* Espaciado interno */
-    border-radius: 25px !important;       /* Bordes redondeados */
-    text-decoration: none !important;     /* Sin subrayado */
-    display: inline-block !important;
-    transition: 0.3s !important;          /* Animación suave */
+    /* CORRECCIÓN: Eliminado !important para mejorar la mantenibilidad del CSS */
+    background-color: #007bff; /* Azul */
+    color: white;              /* Texto blanco */
+    padding: 10px 25px;        /* Espaciado interno */
+    border-radius: 25px;       /* Bordes redondeados */
+    text-decoration: none;     /* Sin subrayado */
+    display: inline-block;
+    transition: 0.3s;          /* Animación suave */
 }
 
 .btn-home:hover {
-    background-color: #0056b3 !important; /* Azul más oscuro */
-    color: #fff !important;
-    text-decoration: none !important;
+    background-color: #0056b3; /* Azul más oscuro */
+    color: #fff;
+    text-decoration: none;
 }
 
 

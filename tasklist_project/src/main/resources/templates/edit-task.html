@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<div th:fragment="taskEditForm" class="container-fluid p-0"> 
+  
+  <form th:action="@{'/tasks/edit/' + ${task.id}}" th:object="${task}" method="post" class="needs-validation" novalidate>
+    <input type="hidden" th:field="*{id}" />
+
+    <div class="mb-3">
+      <label class="form-label fw-bold">Título</label>
+      <input type="text" th:field="*{title}" class="form-control" placeholder="Ej. Diseñar página principal" required>
+      <div class="invalid-feedback">El título es obligatorio.</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold">Descripción</label>
+      <textarea th:field="*{description}" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label fw-bold">Fecha de Vencimiento</label>
+        <input type="date" name="dueDate" th:value="${dueDateStr}" class="form-control"> 
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label fw-bold">Prioridad</label>
+        <select th:field="*{priority}" class="form-select">
+          <option th:each="p : ${priorities}" th:value="${p}" th:text="${p}"></option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold">Estado</label>
+      <select th:field="*{status}" class="form-select">
+        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-bold">Equipo</label>
+        <select name="teamId" class="form-select">
+          <option value="">Sin equipo</option>
+          <option th:each="t : ${teams}" 
+                  th:value="${t.id}" 
+                  th:text="${t.nombre}"
+                  th:selected="${task.equipo != null and task.equipo.id == t.id}">
+          </option>
+        </select>
+    </div>
+
+    <div class="text-end mt-4">
+      <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+      <button type="submit" class="btn btn-success">💾 Guardar Cambios</button>
+    </div>
+  </form>
+
+  <script>
+    // Este script se incluye en el fragmento para asegurar la validación del formulario AJAX
+    (() => {
+      'use strict';
+      const forms = document.querySelectorAll('.needs-validation');
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    })();
+  </script>
+
+</div>
+</html>

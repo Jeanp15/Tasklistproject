@@ -51,14 +51,15 @@
           <td th:text="${task.status}"></td>
           <td th:text="${task.equipo != null ? task.equipo.nombre : 'Sin equipo'}"></td>
           <td class="text-center">
-            <button class="btn btn-sm btn-outline-primary me-1 edit-task-btn"
-                    data-bs-toggle="modal"
-                    data-bs-target="#editTaskModal"
-                    th:data-task-id="${task.id}">✏️</button>
             
-            <form th:action="@{'/tasks/delete/' + ${task.id}}" method="get" 
-                  style="display:inline;" onsubmit="return confirm('¿Seguro que deseas marcar esta tarea como completada?');">
-               <button type="submit" class="btn btn-sm btn-outline-danger">🗑️</button>
+        <button class="btn btn-sm btn-outline-primary me-1 edit-task-btn"
+        data-bs-toggle="modal"
+        data-bs-target="#editTaskModal"
+        th:data-task-id="${task.id}">✏️</button>
+            
+            <form th:action="@{'/tasks/delete/' + ${task.id}}" method="post" 
+                  style="display:inline;" onsubmit="return confirm('¿Seguro que deseas completar esta tarea?');">
+               <button type="submit" class="btn btn-sm btn-outline-success" title="Marcar como Completada">✅</button>
             </form>
           </td>
         </tr>
@@ -70,7 +71,8 @@
     </div>
   </div>
 
-  <div class="modal fade" id="newTaskModal" tabindex="-1" aria-labelledby="newTaskModalLabel" aria-hidden="true">
+  <div class="modal fade" id="newTaskModal" tabindex="-1" aria-labelledby="newTaskModalLabel" aria-hidden="true"
+        th:attr="data-show-on-error=${showNewTaskModal}">
       <div class="modal-dialog">
           <div class="modal-content">
               <div class="modal-header">
@@ -82,6 +84,7 @@
                   <div class="mb-3">
                     <label class="form-label fw-bold">Título</label>
                     <input type="text" th:field="*{title}" class="form-control" placeholder="Ej. Diseñar página principal" required>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">El título no puede estar vacío.</div>
                   </div>
                   <div class="mb-3">
                     <label class="form-label fw-bold">Descripción</label>
@@ -91,6 +94,7 @@
                     <div class="col-md-6 mb-3">
                       <label class="form-label fw-bold">Fecha de Vencimiento</label>
                       <input type="date" th:field="*{dueDate}" class="form-control"> 
+                      <div class="invalid-feedback" th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}">Fecha inválida.</div>
                     </div>
                     <div class="col-md-6 mb-3">
                       <label class="form-label fw-bold">Prioridad</label>
@@ -98,6 +102,7 @@
                         <option value="" disabled selected>Selecciona prioridad</option>
                         <option th:each="p : ${priorities}" th:value="${p}" th:text="${p}"></option>
                       </select>
+                      <div class="invalid-feedback" th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}">Prioridad requerida.</div>
                     </div>
                   </div>
                   <div class="mb-3">
@@ -106,6 +111,7 @@
                       <option value="" disabled selected>Selecciona estado</option>
                       <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
                     </select>
+                     <div class="invalid-feedback" th:if="${#fields.hasErrors('status')}" th:errors="*{status}">Estado requerido.</div>
                   </div>
                   <div class="mb-3">
                       <label class="form-label fw-bold">Equipo</label>
@@ -137,62 +143,6 @@
                         <span class="visually-hidden">Cargando...</span>
                     </div>
                 </div>
-
-                <div id="taskEditForm" class="container-fluid p-0"> 
-                  <form th:action="@{'/tasks/edit/' + ${task.id}}" th:object="${task}" method="post" class="needs-validation" novalidate>
-                    <input type="hidden" th:field="*{id}" />
-
-                    <div class="mb-3">
-                      <label class="form-label fw-bold">Título</label>
-                      <input type="text" th:field="*{title}" class="form-control" placeholder="Ej. Diseñar página principal" required>
-                      <div class="invalid-feedback">El título es obligatorio.</div>
-                    </div>
-
-                    <div class="mb-3">
-                      <label class="form-label fw-bold">Descripción</label>
-                      <textarea th:field="*{description}" class="form-control" rows="3"></textarea>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Fecha de Vencimiento</label>
-                        <input type="date" name="dueDate" th:value="${dueDateStr}" class="form-control"> 
-                      </div>
-                      <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Prioridad</label>
-                        <select th:field="*{priority}" class="form-select">
-                          <option th:each="p : ${priorities}" th:value="${p}" th:text="${p}"></option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div class="mb-3">
-                      <label class="form-label fw-bold">Estado</label>
-                      <select th:field="*{status}" class="form-select">
-                        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
-                      </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Equipo</label>
-                        <select name="teamId" class="form-select">
-                          <option value="">Sin equipo</option>
-                          <option th:each="t : ${teams}" 
-                                  th:value="${t.id}" 
-                                  th:text="${t.nombre}"
-                                  th:selected="${task.equipo != null and task.equipo.id == t.id}">
-                          </option>
-                        </select>
-                    </div>
-
-                    <div class="text-end mt-4">
-                      <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
-                      <button type="submit" class="btn btn-success">💾 Guardar Cambios</button>
-                    </div>
-                  </form>
-
-                </div>
-                
               </div>
           </div>
       </div>

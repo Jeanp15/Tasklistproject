@@ -1,8 +1,6 @@
-// src/main/java/com/tasklist/controller/TaskController.java
 package com.tasklist.controller;
 
 import java.time.LocalDate;
-// ... (otros imports)
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tasklist.model.Task;
+import com.tasklist.model.Team;
 import com.tasklist.repository.TaskRepository;
 import com.tasklist.repository.TeamRepository;
 
@@ -33,23 +32,53 @@ public class TaskController {
     @Autowired
     private TeamRepository teamRepository;
 
-    // ===== Listar todas las tareas (se actualizó en la respuesta anterior) =====
+    // ===== Listar todas las tareas =====
     @GetMapping
     public String listTasks(Model model) {
         model.addAttribute("tasks", taskRepository.findAll());
         
-        // Objetos necesarios para el modal de "Nueva Tarea" (ya se hizo en la respuesta anterior)
-        model.addAttribute("newTask", new Task());
+        // CORRECCIÓN: Solo añadir "newTask" si no viene de un error de validación para preservar los datos del formulario
+        if (!model.containsAttribute("newTask")) {
+             model.addAttribute("newTask", new Task());
+        }
+       
         model.addAttribute("priorities", Task.Priority.values());
         model.addAttribute("statuses", Task.Status.values());
-        model.addAttribute("teams", teamRepository.findAll());
+        model.addAttribute("teams", teamRepository.findByActiveTrue()); 
         
         return "tasks";
     }
 
-    /* EL MÉTODO addForm() FUE ELIMINADO en la respuesta anterior */
+    // ===== MANEJAR EL ENVÍO DEL FORMULARIO DE NUEVA TAREA (FINAL) =====
+    @PostMapping("/add")
+    public String addSubmit(@Valid @ModelAttribute("newTask") Task task, 
+                            BindingResult br,
+                            @RequestParam(value = "teamId", required = false) Long teamId,
+                            Model model) {
+        
+        if (br.hasErrors()) {
+            // CORRECCIÓN: Setear el flag para que el JavaScript reabra el modal
+            model.addAttribute("showNewTaskModal", true);
+            
+            // Recargamos los datos faltantes para que la vista se renderice
+            model.addAttribute("tasks", taskRepository.findAll()); 
+            model.addAttribute("priorities", Task.Priority.values());
+            model.addAttribute("statuses", Task.Status.values());
+            model.addAttribute("teams", teamRepository.findByActiveTrue());
 
-    // ... (Método addSubmit)
+            // Retornar la vista directamente para mostrar errores en el modal
+            return "tasks"; 
+        }
+
+        // Asignar el equipo si se seleccionó uno
+        if (teamId != null) {
+            Optional<Team> teamOpt = teamRepository.findById(teamId);
+            teamOpt.ifPresent(task::setEquipo);
+        }
+
+        taskRepository.save(task);
+        return "redirect:/tasks";
+    }
 
     // ===== Formulario para editar tarea (Ahora como Fragmento Modal) =====
     @GetMapping("/edit/{id}")
@@ -60,7 +89,7 @@ public class TaskController {
             model.addAttribute("task", task);
             model.addAttribute("priorities", Task.Priority.values());
             model.addAttribute("statuses", Task.Status.values());
-            model.addAttribute("teams", teamRepository.findAll());
+            model.addAttribute("teams", teamRepository.findByActiveTrue());
 
             // Formatear fecha para el input
             String dueDateStr = "";
@@ -76,7 +105,7 @@ public class TaskController {
     }
 
     // ===== Eliminar tarea (Eliminación Lógica: Cambia el Status a Completada) =====
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}") 
     public String deleteTask(@PathVariable Long id) {
         Optional<Task> taskOpt = taskRepository.findById(id);
         if (taskOpt.isPresent()) {

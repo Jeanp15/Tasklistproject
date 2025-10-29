@@ -16,6 +16,7 @@ public class TaskRestController {
 
     @GetMapping
     public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+        // CORRECCIÓN: Devolver solo las tareas que NO estén en estado Completada
+        return taskRepository.findByStatusIsNot(Task.Status.Completada);
     }
 }

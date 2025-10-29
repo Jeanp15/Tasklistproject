@@ -6,9 +6,6 @@
 </head>
 <body>
 
-<!-- =========================
-     FOOTER FRAGMENT
-========================= -->
 <div th:fragment="footer">
     <footer>
         <div class="container">
@@ -46,7 +43,7 @@
                     <p>Recibe tips de productividad y novedades de TaskList.</p>
                     <div class="input-group">
                         <input type="email" class="form-control" placeholder="Tu correo electrónico">
-                        <button class="btn btn-primary">Suscribirse</button>
+                        <a th:href="@{/register}" class="btn btn-primary">Suscribirse</a>
                     </div>
                 </div>
             </div>

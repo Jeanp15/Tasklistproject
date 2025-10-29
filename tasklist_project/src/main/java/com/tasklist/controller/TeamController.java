@@ -58,7 +58,7 @@ public class TeamController {
         return "redirect:/teams";
     }
 
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}") // CAMBIO: Usar POST en lugar de GET
     public String delete(@PathVariable Long id) {
         Optional<Team> t = teamRepository.findById(id);
         if (t.isPresent()) {

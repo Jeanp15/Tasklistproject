@@ -2,7 +2,7 @@
 
 /* Re-setting body font for 'Poppins' as it was specified here */
 body {
-    font-family: 'Poppins', sans-serif;
+    /* CORRECCIÓN: Eliminado 'Poppins' ya que no se carga en dashboard.html */
     background-color: #f7f9fc;
     color: #333;
     margin: 0;
