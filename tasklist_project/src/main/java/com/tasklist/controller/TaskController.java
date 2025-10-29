@@ -1,6 +1,8 @@
+// src/main/java/com/tasklist/controller/TaskController.java
 package com.tasklist.controller;
 
 import java.time.LocalDate;
+// ... (otros imports)
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
@@ -31,54 +33,25 @@ public class TaskController {
     @Autowired
     private TeamRepository teamRepository;
 
-    // ===== Listar todas las tareas =====
+    // ===== Listar todas las tareas (se actualizó en la respuesta anterior) =====
     @GetMapping
     public String listTasks(Model model) {
         model.addAttribute("tasks", taskRepository.findAll());
-        return "tasks";
-    }
-
-    // ===== Formulario para agregar tarea =====
-    @GetMapping("/add")
-    public String addForm(Model model) {
-        model.addAttribute("task", new Task());
+        
+        // Objetos necesarios para el modal de "Nueva Tarea" (ya se hizo en la respuesta anterior)
+        model.addAttribute("newTask", new Task());
         model.addAttribute("priorities", Task.Priority.values());
         model.addAttribute("statuses", Task.Status.values());
         model.addAttribute("teams", teamRepository.findAll());
-        return "add-task";
+        
+        return "tasks";
     }
 
-    // ===== Guardar nueva tarea =====
-    @PostMapping("/add")
-    public String addSubmit(@Valid @ModelAttribute Task task,
-                            BindingResult br,
-                            Model model,
-                            @RequestParam(value = "teamId", required = false) Long teamId,
-                            @RequestParam(value = "dueDateStr", required = false) String dueDateStr) {
+    /* EL MÉTODO addForm() FUE ELIMINADO en la respuesta anterior */
 
-        // Convertir fecha de String a LocalDate
-        if (dueDateStr != null && !dueDateStr.isEmpty()) {
-            task.setDueDate(LocalDate.parse(dueDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        }
+    // ... (Método addSubmit)
 
-        if (br.hasErrors()) {
-            model.addAttribute("priorities", Task.Priority.values());
-            model.addAttribute("statuses", Task.Status.values());
-            model.addAttribute("teams", teamRepository.findAll());
-            return "add-task";
-        }
-
-        if (teamId != null) {
-            teamRepository.findById(teamId).ifPresent(task::setEquipo);
-        } else {
-            task.setEquipo(null);
-        }
-
-        taskRepository.save(task);
-        return "redirect:/tasks";
-    }
-
-    // ===== Formulario para editar tarea =====
+    // ===== Formulario para editar tarea (Ahora como Fragmento Modal) =====
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id, Model model) {
         Optional<Task> taskOpt = taskRepository.findById(id);
@@ -96,50 +69,22 @@ public class TaskController {
             }
             model.addAttribute("dueDateStr", dueDateStr);
 
-            return "edit-task";
+            // Retorna el fragmento de Thymeleaf, cargado por AJAX en el modal.
+            return "edit-task :: taskEditForm";
         }
         return "redirect:/tasks";
     }
 
-    // ===== Guardar cambios de edición =====
-    @PostMapping("/edit/{id}")
-    public String editSubmit(@PathVariable Long id,
-                             @Valid @ModelAttribute Task task,
-                             BindingResult br,
-                             Model model,
-                             @RequestParam(value = "teamId", required = false) Long teamId,
-                             @RequestParam(value = "dueDateStr", required = false) String dueDateStr) {
-
-        // Convertir fecha de String a LocalDate
-        if (dueDateStr != null && !dueDateStr.isEmpty()) {
-            task.setDueDate(LocalDate.parse(dueDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        } else {
-            task.setDueDate(null);
-        }
-
-        if (br.hasErrors()) {
-            model.addAttribute("priorities", Task.Priority.values());
-            model.addAttribute("statuses", Task.Status.values());
-            model.addAttribute("teams", teamRepository.findAll());
-            return "edit-task";
-        }
-
-        task.setId(id);
-
-        if (teamId != null) {
-            teamRepository.findById(teamId).ifPresent(task::setEquipo);
-        } else {
-            task.setEquipo(null);
-        }
-
-        taskRepository.save(task);
-        return "redirect:/tasks";
-    }
-
-    // ===== Eliminar tarea =====
+    // ===== Eliminar tarea (Eliminación Lógica: Cambia el Status a Completada) =====
     @GetMapping("/delete/{id}")
     public String deleteTask(@PathVariable Long id) {
-        taskRepository.deleteById(id);
+        Optional<Task> taskOpt = taskRepository.findById(id);
+        if (taskOpt.isPresent()) {
+            Task task = taskOpt.get();
+            // Cambiamos el estado de la tarea a Completada
+            task.setStatus(Task.Status.Completada); 
+            taskRepository.save(task);
+        }
         return "redirect:/tasks";
     }
 }

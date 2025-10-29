@@ -1,3 +1,4 @@
+// src/main/java/com/tasklist/controller/TeamController.java
 package com.tasklist.controller;
 
 import com.tasklist.model.Team;
@@ -18,21 +19,22 @@ public class TeamController {
     @Autowired
     private TeamRepository teamRepository;
 
-    @GetMapping
+   @GetMapping
     public String list(Model model) {
-        model.addAttribute("teams", teamRepository.findAll());
+        // Obtenemos solo los equipos activos
+        model.addAttribute("teams", teamRepository.findByActiveTrue());
+        model.addAttribute("newTeam", new Team()); 
         return "teams";
     }
 
-    @GetMapping("/add")
-    public String addForm(Model model) {
-        model.addAttribute("team", new Team());
-        return "add-team";
-    }
+    /* EL MÉTODO addForm() HA SIDO ELIMINADO (su contenido ahora está en teams.html) */
 
     @PostMapping("/add")
-    public String save(@Valid @ModelAttribute Team team, BindingResult br) {
-        if (br.hasErrors()) return "add-team";
+    public String save(@Valid @ModelAttribute("newTeam") Team team, BindingResult br, Model model) {
+        if (br.hasErrors()) {
+            // Si hay errores, por simplicidad, redirigimos a la lista para recargar el contexto.
+            return "redirect:/teams";
+        }
         teamRepository.save(team);
         return "redirect:/teams";
     }
@@ -42,7 +44,8 @@ public class TeamController {
         Optional<Team> t = teamRepository.findById(id);
         if (t.isPresent()) {
             model.addAttribute("team", t.get());
-            return "edit-team";
+            // Retorna solo el fragmento del formulario, cargado por AJAX en el modal.
+            return "edit-team :: teamEditForm"; 
         }
         return "redirect:/teams";
     }
@@ -57,8 +60,12 @@ public class TeamController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
-        teamRepository.deleteById(id);
+        Optional<Team> t = teamRepository.findById(id);
+        if (t.isPresent()) {
+            Team team = t.get();
+            team.setActive(false);
+            teamRepository.save(team);
+        }
         return "redirect:/teams";
     }
 }
-

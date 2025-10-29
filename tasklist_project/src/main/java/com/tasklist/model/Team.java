@@ -1,3 +1,4 @@
+// src/main/java/com/tasklist/model/Team.java
 package com.tasklist.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -17,8 +18,11 @@ public class Team {
     private String miembros;
     private int progreso;
 
+    // ----- CAMPO NUEVO PARA ELIMINACIÓN LÓGICA -----
+    private boolean active = true;
+
     @OneToMany(mappedBy = "equipo")
-    @JsonManagedReference  // Evita bucles infinitos al serializar Task -> Team -> Task...
+    @JsonManagedReference
     private List<Task> tareas;
 
     // Getters y setters
@@ -39,4 +43,8 @@ public class Team {
 
     public List<Task> getTareas() { return tareas; }
     public void setTareas(List<Task> tareas) { this.tareas = tareas; }
+    
+    // ----- GETTER Y SETTER NUEVOS -----
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 }
