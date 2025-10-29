@@ -5,92 +5,10 @@
   <title>Equipos</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
-  <style>
-    body {
-      background-color: #f8f9fa;
-    }
-
-    /* NAVBAR */
-    .navbar-brand {
-      font-weight: 700;
-      color: #007bff !important;
-      font-size: 1.4rem;
-      transition: color 0.3s;
-    }
-    .navbar-brand:hover {
-      color: #000 !important;
-    }
-
-    /* BOTONES */
-    .btn-success {
-      background-color: #198754;
-      border: none;
-      transition: 0.3s;
-    }
-    .btn-success:hover {
-      background-color: #157347;
-    }
-
-    .btn-home {
-      background-color: #007bff;
-      color: white;
-      padding: 10px 25px;
-      border-radius: 25px;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-    .btn-home:hover {
-      background-color: #0056b3;
-    }
-
-    /* FOOTER */
-    footer {
-      background-color: #1e293b;
-      color: white;
-      padding: 40px 0;
-      margin-top: 60px;
-    }
-    footer a {
-      color: #f8f9fa;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    footer a:hover {
-      color: #d1e7ff;
-    }
-    footer h5 {
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
-    footer .input-group input {
-      border-radius: 25px 0 0 25px;
-    }
-    footer .input-group button {
-      border-radius: 0 25px 25px 0;
-    }
-    footer hr {
-      opacity: 0.2;
-    }
-
-    /* TABLA */
-    table {
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    th {
-      background-color: #0d6efd !important;
-      color: white;
-    }
-    td, th {
-      vertical-align: middle !important;
-    }
-  </style>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 
 <body class="p-4">
-  <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
     <div class="container">
       <a class="navbar-brand" href="tasklist.html">
@@ -102,7 +20,6 @@
     </div>
   </nav>
 
-  <!-- CONTENIDO PRINCIPAL -->
   <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h1 class="fw-bold">Equipos</h1>
@@ -142,53 +59,8 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4 mb-4">
-          <h5>TaskList</h5>
-          <p>El sistema de gestión de tareas más intuitivo y eficiente para aumentar tu productividad.</p>
-          <div class="d-flex gap-3 mt-3">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-linkedin-in"></i></a>
-          </div>
-        </div>
+  <div th:replace="fragments :: footer"></div>
 
-        <div class="col-md-2 mb-4">
-          <h5>Producto</h5>
-          <ul class="list-unstyled">
-            <li><a href="tareas.html">Tareas</a></li>
-            <li><a href="calendario.html">Calendario</a></li>
-            <li><a href="equipo.html">Equipos</a></li>
-          </ul>
-        </div>
-
-        <div class="col-md-2 mb-4">
-          <h5>Legal</h5>
-          <ul class="list-unstyled">
-            <li><a href="TyC.html">Términos y Condiciones</a></li>
-            <li><a href="Politica y Priv.html">Política de Privacidad</a></li>
-          </ul>
-        </div>
-
-        <div class="col-md-4 mb-4">
-          <h5>Suscríbete</h5>
-          <p>Recibe tips de productividad y novedades de TaskList.</p>
-          <div class="input-group">
-            <input type="email" class="form-control" placeholder="Tu correo electrónico">
-            <button class="btn btn-primary">Suscribirse</button>
-          </div>
-        </div>
-      </div>
-      <hr>
-      <p class="text-center mb-0">&copy; 2025 TaskList. Todos los derechos reservados.</p>
-    </div>
-  </footer>
-
-  <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

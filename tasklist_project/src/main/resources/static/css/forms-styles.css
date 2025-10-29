@@ -1,0 +1,71 @@
+/* Custom styles for forms (add-task, edit-task, add-team, edit-team, login, register) */
+
+/* Form Card Styles (for Add/Edit Task/Team) */
+body.form-page {
+    background-color: #f8fafc;
+}
+
+.form-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+    color: #1d4ed8;
+}
+
+/* Authentication Forms Styles (Login/Register) */
+.auth-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+}
+.auth-container h2 {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 20px;
+}
+.auth-container label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+.auth-container input[type="text"],
+.auth-container input[type="password"],
+.auth-container input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box; /* Ensures padding doesn't affect overall width */
+}
+.auth-container button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+.auth-container button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+.auth-container p {
+    text-align: center;
+    margin-top: 15px;
+}
+.auth-container .error {
+    text-align: center;
+    color: red;
+    margin-bottom: 10px;
+}

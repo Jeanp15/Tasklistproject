@@ -1,4 +1,4 @@
--- SQL schema for tasklis_db (reference)
+  -- SQL schema for tasklis_db (reference)
 CREATE DATABASE IF NOT EXISTS tasklis_db CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE tasklis_db;
 CREATE TABLE IF NOT EXISTS Usuario (

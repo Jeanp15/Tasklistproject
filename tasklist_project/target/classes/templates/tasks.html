@@ -6,12 +6,11 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" th:href="@{/css/styles.css}"> <!-- para los estilos -->
-
+  <link rel="stylesheet" th:href="@{/css/styles.css}"> 
+  <link rel="stylesheet" th:href="@{/css/forms-styles.css}">
 </head>
 
 <body class="p-4">
-  <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
     <div class="container">
       <a class="navbar-brand" href="tasklist.html">
@@ -23,11 +22,10 @@
     </div>
   </nav>
 
-  <!-- CONTENIDO PRINCIPAL -->
   <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h1 class="fw-bold">Mis Tareas</h1>
-      <a class="btn btn-success" th:href="@{/tasks/add}">➕ Nueva Tarea</a>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newTaskModal">➕ Nueva Tarea</button>
     </div>
 
     <table class="table table-bordered table-striped shadow-sm">
@@ -66,13 +64,70 @@
     </div>
   </div>
 
-  <!-- Footer incluido desde fragment -->
-<div th:replace="fragments :: footer"></div>
+  <div class="modal fade" id="newTaskModal" tabindex="-1" aria-labelledby="newTaskModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="newTaskModalLabel">📝 Agregar Nueva Tarea</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form th:action="@{/tasks/add}" th:object="${newTask}" method="post" class="needs-validation" novalidate>
+
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Título</label>
+                    <input type="text" th:field="*{title}" class="form-control" placeholder="Ej. Diseñar página principal" required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Descripción</label>
+                    <textarea th:field="*{description}" class="form-control" rows="3"></textarea>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label fw-bold">Fecha de Vencimiento</label>
+                      <input type="date" th:field="*{dueDate}" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label fw-bold">Prioridad</label>
+                      <select th:field="*{priority}" class="form-select">
+                        <option value="" disabled selected>Selecciona prioridad</option>
+                        <option th:each="p : ${priorities}" th:value="${p}" th:text="${p}"></option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Estado</label>
+                    <select th:field="*{status}" class="form-select">
+                      <option value="" disabled selected>Selecciona estado</option>
+                      <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                      <label class="form-label fw-bold">Equipo</label>
+                      <select name="teamId" class="form-select">
+                        <option value="">Sin equipo</option>
+                        <option th:each="t : ${teams}" th:value="${t.id}" th:text="${t.nombre}"></option>
+                      </select>
+                  </div>
+
+                  <div class="text-end mt-4">
+                    <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">💾 Guardar Tarea</button>
+                  </div>
+                </form>
+              </div>
+          </div>
+      </div>
+  </div>
 
 
-  <!-- SCRIPTS -->
+  <div th:replace="fragments :: footer"></div>
+
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-

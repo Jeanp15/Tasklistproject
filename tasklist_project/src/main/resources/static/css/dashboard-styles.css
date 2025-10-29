@@ -1,0 +1,102 @@
+/* Custom styles for dashboard.html */
+
+/* Re-setting body font for 'Poppins' as it was specified here */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f9fc;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.navbar .nav-link {
+  font-weight: 500;
+  color: #555;
+}
+.navbar .nav-link.active {
+  color: #007bff !important;
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, #4a90e2, #007bff);
+  color: #fff;
+  padding: 100px 0;
+  text-align: center;
+}
+.hero-section h1 {
+  font-weight: 700;
+}
+.hero-section .btn {
+  border-radius: 30px;
+  font-weight: 500;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+/* Stats Cards */
+.stats-card {
+  background: #fff;
+  border-radius: 15px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease;
+}
+.stats-card:hover {
+  transform: translateY(-5px);
+}
+.stats-number {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #007bff;
+}
+.stats-label {
+  font-size: 0.95rem;
+  color: #777;
+}
+
+/* Dashboard Section */
+.dashboard-section {
+  background: #fff;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+  margin-bottom: 40px;
+}
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #f1f1f1;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+.section-title {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #2c3e50;
+}
+.view-all-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+.view-all-link:hover {
+  text-decoration: underline;
+}
+
+/* Task Cards */
+.task-card {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease;
+}
+.task-card:hover {
+  transform: translateY(-4px);
+}
