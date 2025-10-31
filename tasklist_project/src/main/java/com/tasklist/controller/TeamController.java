@@ -1,4 +1,3 @@
-// src/main/java/com/tasklist/controller/TeamController.java
 package com.tasklist.controller;
 
 import com.tasklist.model.Team;
@@ -19,44 +18,50 @@ public class TeamController {
     @Autowired
     private TeamRepository teamRepository;
 
-   @GetMapping
+    // ===== Lista de equipos activos =====
+    @GetMapping
     public String list(Model model) {
-        // Obtenemos solo los equipos activos
         model.addAttribute("teams", teamRepository.findByActiveTrue());
-        model.addAttribute("newTeam", new Team()); 
+        model.addAttribute("newTeam", new Team());
         return "teams";
     }
 
+    // ===== Crear nuevo equipo =====
     @PostMapping("/add")
     public String save(@Valid @ModelAttribute("newTeam") Team team, BindingResult br, Model model) {
         if (br.hasErrors()) {
-            return "redirect:/teams";
+            model.addAttribute("teams", teamRepository.findByActiveTrue());
+            return "teams";
         }
         teamRepository.save(team);
         return "redirect:/teams";
     }
 
-    // ===== Formulario para editar equipo (CARGA AJAX) =====
+    // ===== Formulario para editar equipo (modal) =====
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id, Model model) {
         Optional<Team> t = teamRepository.findById(id);
         if (t.isPresent()) {
             model.addAttribute("team", t.get());
-            // Retorna solo el fragmento del formulario.
-            return "edit-team :: teamEditForm"; 
+            return "edit-team :: teamEditForm"; // Fragmento Thymeleaf
         }
         return "redirect:/teams";
     }
 
+    // ===== Guardar cambios del equipo =====
     @PostMapping("/edit/{id}")
-    public String edit(@PathVariable Long id, @Valid @ModelAttribute Team team, BindingResult br) {
-        if (br.hasErrors()) return "edit-team";
+    public String edit(@PathVariable Long id, @Valid @ModelAttribute Team team, BindingResult br, Model model) {
+        if (br.hasErrors()) {
+            model.addAttribute("team", team);
+            return "edit-team :: teamEditForm";
+        }
         team.setId(id);
         teamRepository.save(team);
         return "redirect:/teams";
     }
 
-    @PostMapping("/delete/{id}") 
+    // ===== Eliminación lógica del equipo =====
+    @PostMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         Optional<Team> t = teamRepository.findById(id);
         if (t.isPresent()) {
