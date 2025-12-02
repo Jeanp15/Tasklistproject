@@ -6,7 +6,8 @@
   <title>TaskList - Propuesta Comercial</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="/css/styles.css"> </head>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
     <div class="container">
@@ -16,7 +17,7 @@
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
         aria-label="Toggle navigation" aria-controls="navbarNav" aria-expanded="false">
         <span class="navbar-toggler-icon"></span>
-        </button>
+      </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
@@ -34,7 +35,7 @@
         </ul>
         <div class="d-flex">
           <a href="#contact" class="btn btn-outline-primary me-2">Contacto</a>
-          <a href="/login" class="btn btn-outline-primary me-2">iniciar sesion</a>
+          <a th:href="@{/login}" class="btn btn-outline-primary me-2">Iniciar Sesión</a>
         </div>
       </div>
     </div>
@@ -46,7 +47,7 @@
       <p class="lead mb-4">La solución todo en uno para gestionar tareas individuales y colaborativas</p>
       <div class="d-flex justify-content-center flex-wrap gap-3">
         <a href="#pricing" class="btn btn-light btn-lg">Ver Planes</a>
-        <a th:href="@{/dashboard}" class="btn btn-light btn-lg">Solicitar Demo</a>
+        <a th:href="@{/register(plan='Basico')}" class="btn btn-light btn-lg">Solicitar Demo</a>
       </div>
     </div>
   </section>
@@ -218,8 +219,7 @@
             </ul>
           </div>
           <div class="card-footer bg-transparent text-center">
-            <a href="/login" class="btn btn-outline-primary">Empezar Gratis</a>
-             
+            <a th:href="@{/register(plan='Basico')}" class="btn btn-outline-primary">Empezar Gratis</a>
           </div>
         </div>
       </div>
@@ -241,7 +241,7 @@
             </ul>
           </div>
           <div class="card-footer bg-transparent text-center">
-            <a href="#" class="btn btn-primary">Prueba 14 días gratis</a>
+            <a th:href="@{/register(plan='Profesional')}" class="btn btn-primary">Prueba 14 días gratis</a>
           </div>
         </div>
       </div>
@@ -262,7 +262,7 @@
             </ul>
           </div>
           <div class="card-footer bg-transparent text-center">
-            <a href="#" class="btn btn-outline-primary">Contactar Ventas</a>
+            <a th:href="@{/register(plan='Empresarial')}" class="btn btn-outline-primary">Contactar Ventas</a>
           </div>
         </div>
       </div>
@@ -278,20 +278,20 @@
       <div class="row">
         <div class="col-md-6">
           <form th:action="@{/submit-contact}" method="post">
-          <div class="mb-3">
-            <label for="name" class="form-label">Nombre completo</label>
-            <input type="text" class="form-control" id="name" name="name" required>
-          </div>
-          <div class="mb-3">
-            <label for="email" class="form-label">Correo electrónico</label>
-            <input type="email" class="form-control" id="email" name="email" required>
-          </div>
-          <div class="mb-3">
-            <label for="message" class="form-label">Mensaje</label>
-            <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Enviar mensaje</button>
-        </form>
+            <div class="mb-3">
+              <label for="name" class="form-label">Nombre completo</label>
+              <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Correo electrónico</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+              <label for="message" class="form-label">Mensaje</label>
+              <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar mensaje</button>
+          </form>
         </div>
         <div class="col-md-6">
           <div class="card h-100">

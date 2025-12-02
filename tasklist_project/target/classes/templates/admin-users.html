@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Usuarios</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-light p-4">
+
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>👥 Solicitudes y Usuarios</h2>
+      <a th:href="@{/dashboard}" class="btn btn-secondary">Volver al Dashboard</a>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <table class="table table-striped table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Usuario</th>
+              <th>Rol</th>
+              <th>Plan Solicitado</th>
+              <th>Estado</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="u : ${usuarios}">
+              <td th:text="${u.username}">user</td>
+              <td th:text="${u.rol}">rol</td>
+              <td>
+                  <span class="badge bg-info text-dark" th:text="${u.planSolicitado}">Plan</span>
+              </td>
+              
+              <td>
+                <span th:if="${u.enabled}" class="badge bg-success">Activo</span>
+                <span th:unless="${u.enabled}" class="badge bg-warning text-dark">Pendiente</span>
+              </td>
+
+              <td class="text-center">
+                <div class="d-flex justify-content-center gap-2">
+                    
+                    <form th:action="@{'/admin/users/approve/' + ${u.id}}" method="post" th:unless="${u.enabled}">
+                        <button type="submit" class="btn btn-sm btn-success" title="Aprobar Acceso">
+                            <i class="fas fa-check"></i> Aprobar
+                        </button>
+                    </form>
+
+                    <form th:action="@{'/admin/users/delete/' + ${u.id}}" method="post" 
+                          onsubmit="return confirm('¿Eliminar?');"
+                          th:if="${u.username != #authentication.name}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                    </form>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

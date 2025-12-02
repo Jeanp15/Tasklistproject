@@ -7,7 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy; // Importante
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,25 +18,22 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Autowired
-    private JwtFilter jwtFilter; // Inyectamos nuestro filtro
+    private JwtFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // Deshabilitar CSRF para permitir peticiones POST desde Postman (para la API)
-            // Ojo: En producción real se configuraría diferente, pero para este proyecto académico está bien.
             .csrf(csrf -> csrf.disable())
-            
             .authorizeHttpRequests((requests) -> requests
-                // Permitir login web y login API
+                // Rutas públicas
                 .requestMatchers("/", "/index", "/register", "/login", "/api/auth/login", "/css/**", "/js/**", "/images/**").permitAll()
-                // Todas las demás requieren autenticación
+                
+                // --- NUEVA REGLA: Solo el ADMIN puede entrar a /admin/** ---
+                .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                
+                // El resto requiere estar logueado (cualquier rol)
                 .anyRequest().authenticated()
             )
-            // Configuración Híbrida:
-            // Usamos SessionCreationPolicy.IF_REQUIRED (por defecto) para que Thymeleaf siga funcionando con sesiones.
-            // El JWT Filter se encargará de las peticiones sin sesión (API).
-            
             .formLogin((form) -> form
                 .loginPage("/login")
                 .defaultSuccessUrl("/dashboard", true)
@@ -47,7 +44,6 @@ public class SecurityConfig {
                 .permitAll()
             );
 
-        // AÑADIR EL FILTRO JWT ANTES DEL FILTRO DE USUARIO/PASSWORD
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

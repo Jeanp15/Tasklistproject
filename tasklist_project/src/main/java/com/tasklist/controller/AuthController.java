@@ -24,27 +24,32 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute Usuario usuario, Model model) {
-        // 1. Validar si el usuario ya existe
+    public String registerUser(@ModelAttribute Usuario usuario, 
+                               @RequestParam(required = false) String planSolicitado,
+                               Model model) {
+        
         if (usuarioRepository.findByUsername(usuario.getUsername()) != null) {
             model.addAttribute("error", "El usuario ya existe");
             return "register";
         }
 
-        // 2. ENCRIPTAR CONTRASEÑA (Obligatorio)
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         
-        // 3. VALIDAR EL ROL
-        // Como agregaste el <select> en el HTML, el objeto 'usuario' ya trae el rol elegido (ESTUDIANTE o PROFESIONAL).
-        // Solo por seguridad, verificamos si viene vacío para asignar uno por defecto.
+        // 1. Guardar el Plan Solicitado
+        usuario.setPlanSolicitado(planSolicitado != null ? planSolicitado : "Basico");
+        
+        // 2. Dejar usuario INACTIVO (Pendiente de aprobación)
+        usuario.setEnabled(false); 
+
+        // 3. Asignar Rol (Si no eligió, por defecto Estudiante)
         if (usuario.getRol() == null || usuario.getRol().isEmpty()) {
-            usuario.setRol("ESTUDIANTE"); // Rol por defecto si algo falla
+            usuario.setRol("ESTUDIANTE"); 
         }
 
-        // Ya no forzamos "USER", ahora guardamos lo que el usuario eligió (o el defecto)
         usuarioRepository.save(usuario);
         
-        return "redirect:/login?registered";
+        // Redirigir con mensaje de "Pendiente"
+        return "redirect:/login?pending=true";
     }
 
     @GetMapping("/login")

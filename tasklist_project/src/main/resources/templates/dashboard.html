@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +16,7 @@
 
   <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
     <div class="container">
-      <a class="navbar-brand" href="tasklist.html"><i class="fas fa-tasks me-2"></i>TaskList</a>
+      <a class="navbar-brand" href="index.html"><i class="fas fa-tasks me-2"></i>TaskList</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -23,35 +24,72 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
-          <li class="nav-item"><a class="nav-link" href="/tasks">Mis Tareas</a></li>
-          <li class="nav-item"><a class="nav-link" href="/teams">Equipo</a></li>
-          <li class="nav-item"><a class="nav-link" href="/calendar">Calendario</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/tasks}">Mis Tareas</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/teams}">Equipo</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/calendar}">Calendario</a></li>
+          <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
+            <a class="nav-link text-danger fw-bold" th:href="@{/admin/users}">
+                <i class="fas fa-users-cog"></i> Usuarios
+            </a>
+        </li>
         </ul>
+        
         <div class="d-flex align-items-center">
-          <div class="dropdown me-3">
-            <a href="#" class="dropdown-toggle text-dark" data-bs-toggle="dropdown">
-              <i class="fas fa-bell"></i>
-              <span class="badge bg-danger rounded-pill">3</span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#">Tarea “Diseño UI” está por vencer</a></li>
-              <li><a class="dropdown-item" href="#">Nuevo comentario en “Revisión BD”</a></li>
-              <li><a class="dropdown-item" href="#">Tarea completada: “Documentación”</a></li>
-            </ul>
+          
+            <div class="dropdown me-3">
+              <a href="#" class="dropdown-toggle text-dark" data-bs-toggle="dropdown">
+                <i class="fas fa-bell"></i>
+                <span class="badge bg-danger rounded-pill" 
+                  th:if="${notificationCount > 0}" 
+                  th:text="${notificationCount}">0</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" style="min-width: 280px;">
+                <li><h6 class="dropdown-header">Atención Requerida</h6></li>
+                
+                <li th:each="notif : ${notifications}">
+                  <a class="dropdown-item d-flex justify-content-between align-items-center" th:href="@{/tasks}">
+                      <span th:text="${#strings.abbreviate(notif.title, 18)}">Tarea</span>
+                      <span class="badge bg-danger" th:if="${notif.isVencida()}" style="font-size: 0.7em;">Vencida</span>
+                      <span class="badge bg-warning text-dark" th:unless="${notif.isVencida()}" style="font-size: 0.7em;">Pendiente</span>
+                  </a>
+                </li>
+  
+                <li th:if="${#lists.isEmpty(notifications)}">
+                    <a class="dropdown-item text-muted text-center small" href="#">¡Estás al día!</a>
+                </li>
+                
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-center small" th:href="@{/tasks}">Ver todas las tareas</a></li>
+              </ul>
+            </div>
+            
+            <div class="dropdown">
+              <a href="#" class="dropdown-toggle text-dark d-flex align-items-center" data-bs-toggle="dropdown" style="text-decoration: none;">
+                <img th:src="'https://ui-avatars.com/api/?name=' + ${#authentication.name} + '&background=0d6efd&color=fff&size=32'" 
+                    class="user-avatar me-2" 
+                    style="border-radius: 50%; width: 32px; height: 32px;">
+                
+                <span sec:authentication="name" style="font-weight: 600; margin-right: 5px;">Usuario</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><span class="dropdown-item-text text-muted small">Rol: <span sec:authentication="principal.authorities"></span></span></li>
+                
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" th:href="@{/profile}">Mi Perfil</a></li>
+
+                <li><a class="dropdown-item" th:href="@{/profile}">Configuración</a></li>
+
+                <li><hr class="dropdown-divider"></li>
+
+                <li>
+                    <form th:action="@{/logout}" method="post" style="margin: 0;">
+                        <button type="submit" class="dropdown-item text-danger">Cerrar Sesión</button>
+                    </form>
+                </li>
+              </ul>
+            </div>
+  
           </div>
-          <div class="dropdown">
-            <a href="#" class="dropdown-toggle text-dark" data-bs-toggle="dropdown">
-              <img src="https://ui-avatars.com/api/?name=Usuario+Ejemplo&background=4361ee&color=fff" class="user-avatar me-2">
-              <span>Usuario Ejemplo</span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#">Mi Perfil</a></li>
-              <li><a class="dropdown-item" href="#">Configuración</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
-            </ul>
-          </div>
-        </div>
       </div>
     </div>
   </nav>
@@ -66,10 +104,10 @@
 
 <div class="container mt-5">
     <div class="row mb-5">
-      <div class="col-md-3"><div class="stats-card"><div class="stats-number" th:text="${pendingCount}">12</div><div class="stats-label">Tareas Pendientes</div></div></div>
-      <div class="col-md-3"><div class="stats-card"><div class="stats-number" th:text="${completedCount}">8</div><div class="stats-label">Completadas</div></div></div>
-      <div class="col-md-3"><div class="stats-card"><div class="stats-number" th:text="${expiredCount}">3</div><div class="stats-label">Vencidas</div></div></div>
-      <div class="col-md-3"><div class="stats-card"><div class="stats-number" th:text="${inProgressCount}">2</div><div class="stats-label">En Progreso</div></div></div>
+      <div class="col-md-3"><div class="stats-card"><div class="stats-number" th:text="${pendingCount}">0</div><div class="stats-label">Tareas Pendientes</div></div></div>
+      <div class="col-md-3"><div class="stats-card"><div class="stats-number" th:text="${completedCount}">0</div><div class="stats-label">Completadas</div></div></div>
+      <div class="col-md-3"><div class="stats-card"><div class="stats-number" th:text="${expiredCount}">0</div><div class="stats-label">Vencidas</div></div></div>
+      <div class="col-md-3"><div class="stats-card"><div class="stats-number" th:text="${inProgressCount}">0</div><div class="stats-label">En Progreso</div></div></div>
     </div>
 
     <div class="dashboard-section">
@@ -84,23 +122,29 @@
               <span class="badge mb-2" 
                     th:classappend="${task.priority.name() == 'Alta' ? 'bg-danger' : 
                                      (task.priority.name() == 'Media' ? 'bg-warning text-dark' : 'bg-primary')}"
-                    th:text="${task.priority} + ' Prioridad'">Alta Prioridad</span>
-              <h5 th:text="${task.title}">Diseñar interfaz de usuario</h5>
-              <p th:text="${task.description}">Descripción de la tarea.</p>
-              <small class="text-muted">
-                  <i class="far fa-calendar me-1"></i>
-                  <span th:text="${task.dueDate != null ? #temporals.format(task.dueDate, 'yyyy-MM-dd') : 'Sin fecha'}">Vence: Hoy</span>
-              </small>
+                    th:text="${task.priority} + ' Prioridad'">Prioridad</span>
+              
+              <h5 class="card-title mt-2" th:text="${task.title}">Título Tarea</h5>
+              <p class="card-text text-muted" th:text="${task.description}">Descripción...</p>
+              
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                  <small class="text-muted">
+                      <i class="far fa-calendar me-1"></i>
+                      <span th:text="${task.dueDate != null ? #temporals.format(task.dueDate, 'dd-MM-yyyy') : 'Sin fecha'}">Fecha</span>
+                  </small>
+                  <span class="badge bg-danger" th:if="${task.isVencida()}">Vencida</span>
+              </div>
             </div>
           </div>
         </div>
-        <div th:if="${recentTasks == null or #lists.isEmpty(recentTasks)}" class="col-12">
-
-            <p class="text-center text-muted">No hay tareas activas o próximas para mostrar.</p>
+        
+        <div th:if="${#lists.isEmpty(recentTasks)}" class="col-12">
+            <div class="alert alert-light text-center" role="alert">
+                No hay tareas recientes pendientes. ¡Buen trabajo!
+            </div>
         </div>
       </div>
     </div>
-  </div>
   </div>
 
   <div th:replace="fragments :: footer"></div>
