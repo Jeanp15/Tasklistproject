@@ -14,50 +14,19 @@ public class DataInitializer {
     public CommandLineRunner initData(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         return args -> {
             
-            // 1. Usuario ADMINISTRADOR
+            // 1. Usuario ADMINISTRADOR (Este sí lo dejamos para poder gestionar el sistema)
             if (usuarioRepository.findByUsername("admin") == null) {
                 Usuario admin = new Usuario();
                 admin.setUsername("admin");
-                admin.setPassword(passwordEncoder.encode("admin")); // Contraseña: admin
+                admin.setPassword(passwordEncoder.encode("admin")); // Pass: admin
                 admin.setEmail("admin@tasklist.com");
                 admin.setRol("ADMIN");
-                admin.setPlanSolicitado("Empresarial"); // Plan por defecto para admin
-                admin.setEnabled(true); // ACTIVADO
+                admin.setPlanSolicitado("Empresarial");
+                admin.setEnabled(true); // El admin nace activado
                 usuarioRepository.save(admin);
                 System.out.println(">>> Usuario ADMIN creado: admin / admin");
             }
 
-            // 2. Usuario ESTUDIANTE
-            if (usuarioRepository.findByUsername("estudiante") == null) {
-                Usuario student = new Usuario();
-                student.setUsername("estudiante");
-                student.setPassword(passwordEncoder.encode("1234")); // Contraseña: 1234
-                student.setEmail("estudiante@tasklist.com");
-                student.setRol("ESTUDIANTE");
-                
-                // CORRECCIÓN AQUÍ: Usamos 'student', no 'admin'
-                student.setPlanSolicitado("Basico"); 
-                
-                student.setEnabled(true); // ACTIVADO
-                usuarioRepository.save(student);
-                System.out.println(">>> Usuario ESTUDIANTE creado: estudiante / 1234");
-            }
-
-            // 3. Usuario PROFESIONAL
-            if (usuarioRepository.findByUsername("profesional") == null) {
-                Usuario pro = new Usuario();
-                pro.setUsername("profesional");
-                pro.setPassword(passwordEncoder.encode("1234")); // Contraseña: 1234
-                pro.setEmail("pro@tasklist.com");
-                pro.setRol("PROFESIONAL");
-                
-                // CORRECCIÓN AQUÍ: Asignamos plan al profesional también
-                pro.setPlanSolicitado("Profesional");
-                
-                pro.setEnabled(true); // ACTIVADO
-                usuarioRepository.save(pro);
-                System.out.println(">>> Usuario PROFESIONAL creado: profesional / 1234");
-            }
         };
     }
 }

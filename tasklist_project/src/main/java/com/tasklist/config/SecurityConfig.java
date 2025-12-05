@@ -7,7 +7,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,13 +24,23 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests((requests) -> requests
-                // Rutas públicas
-                .requestMatchers("/", "/index", "/register", "/login", "/api/auth/login", "/css/**", "/js/**", "/images/**").permitAll()
+                // Rutas públicas (Se agregó /api/auth/register a la lista)
+                .requestMatchers(
+                    "/", 
+                    "/index", 
+                    "/register", 
+                    "/login", 
+                    "/api/auth/login", 
+                    "/api/auth/register",  // <--- NUEVA RUTA PÚBLICA
+                    "/css/**", 
+                    "/js/**", 
+                    "/images/**"
+                ).permitAll()
                 
-                // --- NUEVA REGLA: Solo el ADMIN puede entrar a /admin/** ---
+                // Solo el ADMIN puede entrar al panel de administración
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                 
-                // El resto requiere estar logueado (cualquier rol)
+                // El resto requiere estar autenticado
                 .anyRequest().authenticated()
             )
             .formLogin((form) -> form
